@@ -4,7 +4,7 @@ const group_token = 'a7acb2c3d44ad4102eeb7800f01212d2363b52f96c7f8c37c798205f1d4
 
 const vk = require("VK-Promise")(group_token);
 
-const message = 'Вам людям, лишь-бы только гадости разные говорить, толи дело мы, роботы - базарим только по факту!';
+const message = 'Hello from Node.js!';
 
 const interval = 6;
 
@@ -12,7 +12,7 @@ const now = new Date().getTime();
 
 const isLater = date => date * 1000 < now - interval;
 
-const sendMessage = (user_ids) => new Promise((resolve, reject) =>
+const sendMessage = (user_ids) => 
 	setTimeout(() => 
 		vk.messages.send({
 			user_ids : user_ids,
@@ -22,7 +22,7 @@ const sendMessage = (user_ids) => new Promise((resolve, reject) =>
 		.catch(reject),
 		//vk.messages.send((err, res) => err ? reject(err) : resolve(res)),
  	2000)
-)
+
 
 vk.messages.getDialogs({
 		unread : 1
