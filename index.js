@@ -6,7 +6,7 @@ const vk = require("VK-Promise")(group_token);
 
 const message = 'Hello from Node.js!';
 
-const interval = 600000;
+const interval = 6;
 
 const now = new Date().getTime();
 
@@ -16,28 +16,32 @@ vk.messages.getDialogs({
 		unread : 1
 	})
 	.then(res => {
+		
 		console.log(JSON.stringify(res));
-		const users = res.items
-			.filter(item => isLater(item.message.date))
-			.map(item => item.message.user_id)
-			.reduce(
-				(previousValue, currentValue, index) => {
-					let r;
-					if(index % 100 === 0) {
-						r = [...previousValue, [currentValue]];
-					}
-					else {
-						previousValue[previousValue.length - 1] = [...previousValue[previousValue.length - 1], currentValue]
-						r = previousValue;
-					}
-					return r;
-				},
-			[])
-			.map(item => item.join(','));
+
+		if(res.count === 0) return;
 
 		let i = 0;
 
-		if(!users.length) return;
+		const users = res.items.reduce(
+			(previousValue, item, index) => {
+				if(!isLater(item.message.date)) return;
+
+				if(index % 100 === 0) {
+					if(index > 0) i++;
+					previousValue[i] = `${item.message.user_id}`;
+				}
+				else {
+					previousValue[i] = `${previousValue[i]},${item.message.user_id}`;
+				}
+
+				return previousValue;
+			},
+		[]);
+
+		if(!users || !users.length) return;
+
+		i = 0;
 
 		setTimeout(function sendMessage() {
 			if(i < users.length) {
