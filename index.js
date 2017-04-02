@@ -12,18 +12,6 @@ const now = new Date().getTime();
 
 const isLater = date => date * 1000 < now - interval;
 
-/*
-const sendMessage = (user_ids) => setTimeout(() => // setTimeout - чтобы Контакт нас не забанил
-	vk.messages.send({
-		user_ids : user_ids,
-		message : message
-	})
-	.then(console.log)
-	.catch(console.error),
-2000);
-*/
-
-
 vk.messages.getDialogs({
 		unread : 1
 	})
