@@ -6,22 +6,22 @@ const vk = require("VK-Promise")(group_token);
 
 const message = 'Hello from Node.js!';
 
-const interval = 6;
+const interval = 600000;
 
 const now = new Date().getTime();
 
 const isLater = date => date * 1000 < now - interval;
 
-const sendMessage = (user_ids) => 
-	setTimeout(() => 
-		vk.messages.send({
-			user_ids : user_ids,
-			message : message
-		})
-		.then(resolve)
-		.catch(reject),
-		//vk.messages.send((err, res) => err ? reject(err) : resolve(res)),
- 	2000)
+/*
+const sendMessage = (user_ids) => setTimeout(() => // setTimeout - чтобы Контакт нас не забанил
+	vk.messages.send({
+		user_ids : user_ids,
+		message : message
+	})
+	.then(console.log)
+	.catch(console.error),
+2000);
+*/
 
 
 vk.messages.getDialogs({
@@ -29,14 +29,13 @@ vk.messages.getDialogs({
 	})
 	.then(res => {
 		console.log(JSON.stringify(res));
-		//return 
-		res.items
+		const users = res.items
 			.filter(item => isLater(item.message.date))
 			.map(item => item.message.user_id)
 			.reduce(
 				(previousValue, currentValue, index) => {
 					let r;
-					if(index && index % 100 === 0) {
+					if(index % 100 === 0) {
 						r = [...previousValue, [currentValue]];
 					}
 					else {
@@ -45,14 +44,24 @@ vk.messages.getDialogs({
 					}
 					return r;
 				},
-			[[]])
-			.forEach(item => sendMessage(item.join(',')))
-		//:
-		//new Error('нет не отвеченный сообщений')
-			//.map(item => item.join(','));
+			[])
+			.map(item => item.join(','));
 
-		//console.log(r);
-		//return r;
+		let i = 0;
+
+		if(!users.length) return;
+
+		setTimeout(function sendMessage() {
+			if(i < users.length) {
+				vk.messages.send({
+						user_ids : users[i],
+						message : 'Hello from Node.js!'
+					})
+					.then(console.log)
+					.catch(console.error);
+				i++;
+				sendMessage();
+			}
+		}, 2000)
 	})
-	//.then(Promise.all)
 	.catch(console.error);
