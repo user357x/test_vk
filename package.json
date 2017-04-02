@@ -1,0 +1,16 @@
+{
+  "name": "test_vk",
+  "version": "1.0.0",
+  "description": "test_vk",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+
+  "dependencies": {
+    "VK-Promise": "0.1.8"
+  },
+
+  "author": "vasily",
+  "license": "ISC"
+}
