@@ -6,7 +6,7 @@ const vk = require("VK-Promise")(group_token);
 
 const message = 'Hello from Node.js!';
 
-const interval = 6;
+const interval = 600000;
 
 const now = new Date().getTime();
 
