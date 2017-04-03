@@ -48,11 +48,11 @@ vk.getAll("messages.getDialogs", {
 	setTimeout(function sendMessage() {
 		if(i < users.length) {
 			vk.messages.send({
-					user_ids : users[i],
-					message : 'Hello from Node.js!'
-				})
-				.then(console.log)
-				.catch(console.error);
+				user_ids : users[i],
+				message : 'Hello from Node.js!'
+			})
+			.then(console.log)
+			.catch(console.error);
 			i++;
 			setTimeout(sendMessage, pause);
 		}
