@@ -12,8 +12,9 @@ const now = new Date().getTime();
 
 const isLater = date => date * 1000 < now - interval;
 
-vk.messages.getDialogs({
-		unread : 1
+vk.getAll("messages.getDialogs", {
+		unread : 1,
+		count : 200
 	})
 	.then(res => {
 		
@@ -52,7 +53,7 @@ vk.messages.getDialogs({
 					.then(console.log)
 					.catch(console.error);
 				i++;
-				sendMessage();
+				setTimeout(sendMessage, 2000);
 			}
 		}, 2000)
 	})
