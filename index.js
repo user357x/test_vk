@@ -19,12 +19,13 @@ vk.getAll("messages.getDialogs", {
 	.then(res => {
 		
 		console.log(JSON.stringify(res));
+		//console.log(res.length);
 
-		if(res.count === 0) return;
+		if(!res.length) return;
 
 		let i = 0;
 
-		const users = res.items.reduce(
+		const users = res.reduce(
 			(previousValue, item, index) => {
 				if(!isLater(item.message.date)) return;
 
