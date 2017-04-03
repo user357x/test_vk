@@ -6,56 +6,56 @@ const vk = require("VK-Promise")(group_token);
 
 const message = 'Hello from Node.js!';
 
-const interval = 6;
+const interval = 600000;
 
 const now = new Date().getTime();
 
 const isLater = date => date * 1000 < now - interval;
 
 vk.getAll("messages.getDialogs", {
-		unread : 1,
-		count : 200
-	})
-	.then(res => {
-		
-		console.log(JSON.stringify(res));
-		//console.log(res.length);
+	unread : 1,
+	count : 200
+})
+.then(res => {
+	
+	console.log(JSON.stringify(res));
 
-		if(!res.length) return;
+	if(!res.length) return;
 
-		let i = 0;
+	let i = 0;
 
-		const users = res.reduce(
-			(previousValue, item, index) => {
-				if(!isLater(item.message.date)) return;
+	const users = res.reduce(
+		(previousValue, item, index) => {
+			if(!isLater(item.message.date)) return;
 
-				if(index % 100 === 0) {
-					if(index > 0) i++;
-					previousValue[i] = `${item.message.user_id}`;
-				}
-				else {
-					previousValue[i] = `${previousValue[i]},${item.message.user_id}`;
-				}
-
-				return previousValue;
-			},
-		[]);
-
-		if(!users || !users.length) return;
-
-		i = 0;
-
-		setTimeout(function sendMessage() {
-			if(i < users.length) {
-				vk.messages.send({
-						user_ids : users[i],
-						message : 'Hello from Node.js!'
-					})
-					.then(console.log)
-					.catch(console.error);
-				i++;
-				setTimeout(sendMessage, 2000);
+			if(index % 100 === 0) {
+				if(index > 0) i++;
+				previousValue[i] = `${item.message.user_id}`;
 			}
-		}, 2000)
-	})
-	.catch(console.error);
+			else {
+				previousValue[i] = `${previousValue[i]},${item.message.user_id}`;
+			}
+
+			return previousValue;
+		},
+	[]);
+
+	if(!users || !users.length) return;
+
+	i = 0;
+	const pause = 2000;
+
+	setTimeout(function sendMessage() {
+		if(i < users.length) {
+			vk.messages.send({
+					user_ids : users[i],
+					message : 'Hello from Node.js!'
+				})
+				.then(console.log)
+				.catch(console.error);
+			i++;
+			setTimeout(sendMessage, pause);
+		}
+	}, pause)
+
+}).catch(console.error);
