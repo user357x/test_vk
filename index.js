@@ -6,7 +6,7 @@ const vk = require("VK-Promise")(group_token);
 
 const message = 'Hello from Node.js!';
 
-const interval = 600000;
+const interval = 6;
 
 const now = new Date().getTime();
 
@@ -22,14 +22,14 @@ vk.getAll("messages.getDialogs", {
 
 	if(!res.length) return;
 
-	let i = 0;
+	let i;
 
 	const users = res.reduce(
 		(previousValue, item, index) => {
 			if(!isLater(item.message.date)) return;
 
 			if(index % 100 === 0) {
-				if(index > 0) i++;
+				i = index === 0 ? 0 : i + 1;
 				previousValue[i] = `${item.message.user_id}`;
 			}
 			else {
