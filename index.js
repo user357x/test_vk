@@ -36,7 +36,7 @@ vk.getAll("messages.getDialogs", {
 		}
 	}
 
-	if(!users || !users.length) return;
+	if(!users.length) return;
 
 	j = 0;
 	const pause = 2000;
