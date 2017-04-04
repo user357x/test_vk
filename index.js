@@ -18,42 +18,38 @@ vk.getAll("messages.getDialogs", {
 })
 .then(res => {
 	
-	console.log(JSON.stringify(res));
-
 	if(!res.length) return;
 
-	let i;
+	const users = [];
+	
+	let j;
 
-	const users = res.reduce(
-		(previousValue, item, index) => {
-			if(!isLater(item.message.date)) return;
+	for(let i = 0; i < res.length; i++) {
+		if(!isLater(res[i].message.date)) continue;
 
-			if(index % 100 === 0) {
-				i = index === 0 ? 0 : i + 1;
-				previousValue[i] = `${item.message.user_id}`;
-			}
-			else {
-				previousValue[i] = `${previousValue[i]},${item.message.user_id}`;
-			}
-
-			return previousValue;
-		},
-	[]);
+		if(i % 100 === 0) {
+			j = i === 0 ? 0 : j + 1;
+			users[j] = `${res[i].message.user_id}`;
+		}
+		else {
+			users[j] = `${users[j]},${res[i].message.user_id}`;
+		}
+	}
 
 	if(!users || !users.length) return;
 
-	i = 0;
+	j = 0;
 	const pause = 2000;
 
 	setTimeout(function sendMessage() {
-		if(i < users.length) {
+		if(j < users.length) {
 			vk.messages.send({
-				user_ids : users[i],
+				user_ids : users[j],
 				message : 'Hello from Node.js!'
 			})
 			.then(console.log)
 			.catch(console.error);
-			i++;
+			j++;
 			setTimeout(sendMessage, pause);
 		}
 	}, pause)
